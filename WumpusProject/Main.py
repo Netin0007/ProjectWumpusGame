@@ -36,41 +36,73 @@ class Pontos:
             for i, jogador in enumerate(self.pontos, 1):
                 print(f"{i}. {jogador['nome']} - {jogador['pontos']} pontos")
 
-
-class Jogador:
-    def __init__(self, nome):
-        self.nome = nome
-        
-        
-        
-        
-        
         
 
 class NovoJogo:
     def __init__(self):
         self.caverna = None
         self.nome = ""
-        self.dificuldade = ""
+        self.dificuldade = ["Facíl(4x4)", "Normal(6x6)", "Dificil(10x10)"]
         self.posicao = (0, 0)
+        self.dif = 0
         
-    def cadastro (self):
-        self.nome = input("Digite seu nome:\n")
+    def exibirDificuldade(self):
+        print("DIFICULDADES\n")
         
-        self.dificuldade = input("DIficuldades:\neasy: 4x4\nnormal: 6x6\nhard: 10x10\n").lower()
+        for inx, value in enumerate(self.dificuldade):
+            if inx == self.dif:
+                print(f'> {value} <')
+            else:
+                print(f' {value}')
+                
+    
+    def escDif(self):
         
-        if self.dificuldade == "easy":
+        esc = input("escolha uma ação(W/S): \n").upper()
+        if esc == "W" and self.dif > 0:
+            self.dif -= 1
+        elif esc == "S" and self.dif < len(self.dificuldade) -1:
+            self.dif += 1
+        elif esc == "":
+            self.exe()
+        
+        
+    def exe(self):
+        ex = self.dificuldade[self.dif]
+        if ex == "Facíl(4x4)":
             self.caverna = Caverna(4)
-        elif self.dificuldade == "normal":
+            self.posicao = (0, 0)
+        elif ex == "Normal(6x6)":
             self.caverna = Caverna(6)
-        elif self.dificuldade == "hard":
+            self.posicao = (0, 0)
+        elif ex == "Dificil(10x10)":
             self.caverna = Caverna(10)
+            self.posicao = (0, 0)
         else:
             print("Dificuldade inválida! Usando 'normal' por padrão.")
-            self.caverna = Caverna(6)
+            self.caverna(6)
+            self.posicao = (0, 0)
         
-    def jogar(self):
+        
+
+    def cadastro (self):
+   
+        self.nome = input("Digite seu nome:\n")
+       
         while True:
+            os.system("cls")
+            self.exibirDificuldade()
+            self.escDif()
+            if self.caverna:
+                break
+        self.jogar()
+        
+        
+
+    def jogar(self):
+        
+        while True:
+            
             os.system("cls")
             self.caverna.exibir(self.posicao)
 
@@ -85,7 +117,9 @@ class NovoJogo:
                 self.posicao = (self.posicao[0], self.posicao[1] + 1)
             elif move == "q":
                 print("encerrando jogo..")
-                break
+                m = menuInicial()
+                m.run()
+            
             else:
                 print("movimento invalido..")
     
@@ -93,7 +127,7 @@ class NovoJogo:
 class menuInicial:
         
     def __init__(self):
-        self.menu = ["Novo Jogo", "Continuar", "Ranking", "Sair"]
+        self.menu = ["Novo Jogo", "Ranking", "Sair"]
         self.linha = 0
         self.pontos = Pontos()
             
@@ -126,10 +160,6 @@ class menuInicial:
         elif op == "Novo Jogo":
             nwgame = NovoJogo()
             nwgame.cadastro()
-            nwgame.jogar()
-        elif op == "Continuar":
-            print("começar jogo") 
-            input("Pressione Enter para voltar ao menu...") 
                         
     def run (self):
         
